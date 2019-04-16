@@ -1,7 +1,7 @@
 // Hunter Cavers (1288108)
 // Sivaram Manoharan (1299026)
 
-// Import librabies needed 
+// Import libraries needed 
 import java.io.IOException;
 
 class LZencode
