@@ -16,7 +16,7 @@ class Node
 	private List<Node> _children;
 	
 	// Constructor to create new nodes
-	public Node(int index, byte value)
+	public Node(int index, byte	value)
 	{
 		_index = index;
 		_value = value;
@@ -42,16 +42,16 @@ class Node
 		_children.add(node);
 	}
 	
-	// Returns the index of the child that contains the input or returns 0
-	public int childrenContain(byte value)
+	// Returns the child that contains the input or returns null
+	public Node childrenContain(byte value)
 	{
 		for(Node node : _children)
 		{
 			if(node.getValue() == value)
 			{
-				return node.getIndex();
+				return node;
 			}
 		}
-		return 0;
+		return null;
 	}
 }
