@@ -13,7 +13,7 @@ class LZencode
 		// Try catch to handle errors 
 		try
 		{
-			// Call process method to prcess input
+			// Call process method to process input
 			process();
 		}
 		catch(IOException ex)
