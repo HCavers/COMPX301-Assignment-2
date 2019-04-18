@@ -44,7 +44,6 @@ class LZdecode
 			System.out.print((char)node.getValue());
 			line = reader.readLine();
 		}
-		System.out.println();
 	}
 	
 	public static void getOutput(int index)
