@@ -39,8 +39,18 @@ public void uShiftRight(int value, int shift) {
 public void mask(int value, int mask) {
 	value = value & mask;
 }
+
+public void copy(int value, int copy) {
+	value = value | copy;
+}
 	
-	
+public void pack(int value, int mask, int phraseNum, int charMismatched, int pOffset, int cOffset) {
+	mask(value,mask);
+	shiftLeft(phraseNum,pOffset);
+	copy(value,phraseNum);
+	shiftLeft(charMismatched,cOffset); // Todo: Case where not enough space
+	copy(value,charMismatched);
+}
 	
 	
 	
