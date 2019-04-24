@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+
 public class LZpack {
 
 public static void main(String[] args) {	
@@ -21,6 +22,12 @@ public static void main(String[] args) {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
+	int usedBits = 10; // X
+	int maxBits = 32; // B
+	int charBits = 0; // C
+	int intBits = 0; // P
+	int mask = 0; // MASK for X
+	
 	File input = new File("input.txt");
 	try {
 		BufferedReader br = new BufferedReader(new FileReader(input));
@@ -30,6 +37,7 @@ public static void main(String[] args) {
 			encodeLine(Line,5);
 			Line = br.readLine();
 		}
+		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -72,6 +80,15 @@ public int calculateOffset(int value) {
 		   return 1;
 	   }
 	   return offset;
+}
+
+public static int generateMask(int length, int maxBits) {
+	int offset = maxBits - length;
+	int mask = 1 << length;
+	mask--;
+	mask <<= offset;
+	System.out.println(Integer.toBinaryString(mask));
+	return mask;
 }
 	
 public void pack(int value, int mask, int phraseNum, int charMismatched, int pOffset, int cOffset) {
