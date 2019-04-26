@@ -12,7 +12,7 @@ import java.io.IOException;
 public class LZpack {
 public static int currUsedBits = 0; // X length
 public static void main(String[] args) {	
-//	double pattNum = Double.valueOf(args[0]);
+
 //	InputStream bitStream = new BufferedInputStream(System.in);
 //	byte [] byteArray = new byte[1024];
 //	try {
@@ -23,8 +23,6 @@ public static void main(String[] args) {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
-	//int usedBits = 10; // X length
-	
 	int availableBits = 32;
 	int maxBits = 32; // B length
 	int value = 0; // B
@@ -44,6 +42,7 @@ public static void main(String[] args) {
 		System.out.flush();
 		
 		
+		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -53,7 +52,6 @@ public static void main(String[] args) {
 }
 
 public static int bitsNeeded(int counter) {
-	   //int offset = Integer.SIZE-Integer.numberOfLeadingZeros(value);
 	   double bits = Math.log(counter)/Math.log(2.0);
 	   if(bits == 0) {
 		   return 1;
@@ -80,80 +78,85 @@ public static int encodeLine(String Line, int counter, int value) {
 	
 	
 	if(iBits < availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
-		System.out.println("Index: " + index + " Which is in binary: " + (Integer.toBinaryString(index)) );
-		System.out.println("Int bits required: " + iBits);
+		//System.out.println("Index: " + index + " Which is in binary: " + (Integer.toBinaryString(index)) );
+		//System.out.println("Int bits required: " + iBits);
 		availableBits = availableBits - iBits;
 		value = pack(value,mask,index,availableBits);
 		currUsedBits = currUsedBits + iBits;
-		System.out.println(currUsedBits);
+		//System.out.println(currUsedBits);
 		if(cBits < availableBits) {
-			System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
+			//System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
 			availableBits = availableBits - cBits;
 			value = pack(value,mask,character,availableBits);
 			currUsedBits = currUsedBits + cBits;
-			System.out.println(currUsedBits);
+			//System.out.println(currUsedBits);
 			return value;
 		}
 		value = outputBytes(value);
 		availableBits = availableBits + 16;
-		System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
+		//System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
 		availableBits = availableBits - cBits;
 		value = pack(value,mask,character,availableBits);
 		currUsedBits = currUsedBits + cBits;
-		System.out.println(currUsedBits);
+		//System.out.println(currUsedBits);
 		return value;
 	}
 	value = outputBytes(value);
 	availableBits = availableBits + 16;
-	System.out.println("Index: " + index + " Which is in binary: " + (Integer.toBinaryString(index)) );
-	System.out.println("Int bits required: " + iBits);
+	//System.out.println("Index: " + index + " Which is in binary: " + (Integer.toBinaryString(index)) );
+	//System.out.println("Int bits required: " + iBits);
 	availableBits = availableBits - iBits;
 	value = pack(value,mask,index,availableBits);
 	currUsedBits = currUsedBits + iBits;
-	System.out.println(currUsedBits);
+	//System.out.println(currUsedBits);
 	if(cBits < availableBits) {
-		System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
+		//System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
 		availableBits = availableBits - cBits;
 		value = pack(value,mask,character,availableBits);
 		currUsedBits = currUsedBits + cBits;
-		System.out.println(currUsedBits);
+		//System.out.println(currUsedBits);
 		return value;
 	}
 	value = outputBytes(value);
 	availableBits = availableBits + 16;
-	System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
+	//System.out.println("Character: " + character + " Which is in binary: " + (Integer.toBinaryString(character)) );
 	availableBits = availableBits - cBits;
 	value = pack(value,mask,character,availableBits);
 	currUsedBits = currUsedBits + cBits;
-	System.out.println(currUsedBits);
+	//System.out.println(currUsedBits);
 	return value;
 	
 	
 	
 }
 	
-public static int pack(int value, int mask, int inputBits, int bitOffset) {
-	System.out.println("Value at start  : 	" + (Integer.toBinaryString(value)) );
+public static int pack(int value, int masdsk, int inputBits, int bitOffset) {
+	int mask = generateMask(currUsedBits,32);
+	//System.out.println("Value at start  : 	" + (Integer.toBinaryString(value)) );
 	value = value & mask;
-	System.out.println("Value after mask: 	" + (Integer.toBinaryString(value)) );
-	System.out.println("inputBits before Shift: " + (Integer.toBinaryString(inputBits)));
+	//System.out.println("Value after mask: 	" + (Integer.toBinaryString(value)) );
+	//System.out.println("inputBits before Shift: " + (Integer.toBinaryString(inputBits)));
 	inputBits = inputBits << bitOffset;
-	System.out.println("inputBits after Shift : " + (Integer.toBinaryString(inputBits)));
+	//System.out.println("inputBits after Shift : " + (Integer.toBinaryString(inputBits)));
 	value = value | inputBits;
-	System.out.println("Value after Copy:	" + (Integer.toBinaryString(value)) );
-	System.out.println("");
-	System.out.println("");
+	//System.out.println("Value after Copy:	" + (Integer.toBinaryString(value)) );
+	//System.out.println("");
+	//System.out.println("");
 	return value;
 }
 	
 public static int outputBytes(int value) {
-	 byte firstOut = (byte) ((value & 0xF000)>>> 24) ;
-	 byte secondOut = (byte) ((value & 0x0F00)>>> 16);
+	//System.out.println("THE VALUE IS: " + Integer.toBinaryString(value));
+	 byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
+	 byte secondOut = (byte) ((value &  0x00FF0000)>>> 16);
 	 System.out.write(firstOut);
+	 
 	 System.out.write(secondOut);
+	
 	 System.out.flush();
 	 currUsedBits = currUsedBits - 16;
 	 value = value << 16;
+	 //System.out.println("THE VALUE IS: " + Integer.toBinaryString(value));
 	 return value;
 }
 	
