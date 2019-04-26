@@ -41,7 +41,8 @@ class LZdecode
 			{				
 				getOutput(index - 1);
 			}
-			System.out.print((char)node.getValue());
+			System.out.write(node.getValue());
+			System.out.flush();
 			line = reader.readLine();
 		}
 	}
@@ -53,6 +54,7 @@ class LZdecode
 		{
 			getOutput(node.getIndex() - 1);
 		}
-		System.out.print((char)node.getValue());
+		System.out.write(node.getValue());
+		System.out.flush();
 	}
 }
