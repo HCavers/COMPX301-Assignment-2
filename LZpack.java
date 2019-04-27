@@ -32,18 +32,20 @@ public static void main(String[] args) {
 		br.close();
 		int numOut = currUsedBits / 8;
 		for(int i =0;i< numOut; i ++) {
-			int mask = generateMask(8,32);
-			int output = value & mask;
-			output = output >>> 24;
-			System.out.write(output);
+			byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
+			//int mask = generateMask(8,32);
+			//int output = value & mask;
+			//output = output >>> 24;
+			System.out.write(firstOut);
 			value = value << 8;
 			System.out.flush();
 		}
 		if (currUsedBits % 8 != 0) {
-			int mask = generateMask(8,32);
-			int output = value & mask;
-			output = output >>> 24;
-			System.out.write(output);
+			byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
+			//int mask = generateMask(8,32);
+			//int output = value & mask;
+			//output = output >>> 24;
+			System.out.write(firstOut);
 			System.out.flush();
 		}
 	
@@ -83,11 +85,11 @@ public static int encodeLine(String Line, int counter, int value) {
 	
 	
 	
-	if(iBits < availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
+	if(iBits <= availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
 		availableBits = availableBits - iBits;
 		value = pack(value,index,availableBits);
 		currUsedBits = currUsedBits + iBits;
-		if(cBits < availableBits) {
+		if(cBits <= availableBits) {
 			availableBits = availableBits - cBits;
 			value = pack(value,character,availableBits);
 			currUsedBits = currUsedBits + cBits;
@@ -101,17 +103,17 @@ public static int encodeLine(String Line, int counter, int value) {
 		return value;
 	}
 	value = outputBytes(value);
-	availableBits = availableBits + 16;
+	availableBits = availableBits + 16 - iBits;
 	value = pack(value,index,availableBits);
 	currUsedBits = currUsedBits + iBits;
-	if(cBits < availableBits) {
+	if(cBits <= availableBits) {
 		availableBits = availableBits - cBits;
 		value = pack(value,character,availableBits);
 		currUsedBits = currUsedBits + cBits;
 		return value;
 	}
 	value = outputBytes(value);
-	availableBits = availableBits + 16;
+	availableBits = availableBits + 16 - cBits;
 	value = pack(value,character,availableBits);
 	currUsedBits = currUsedBits + cBits;
 	return value;

@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 class LZdecode
 {
+	// List to hold all past phrases
 	static List<Node> list = new ArrayList<Node>();
+	// Main method
 	public static void main(String[] args)
 	{
 		// Try catch to handle errors
@@ -21,6 +23,7 @@ class LZdecode
 		}
 		catch (IOException ex)
 		{
+			// Print exception stack trace to help with debugging
 			ex.printStackTrace();
 		}
 	}

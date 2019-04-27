@@ -16,8 +16,7 @@ public class LZunpack {
 			line = System.in.read();
 			while(line != -1) {
 				output = getNextPair(output,counter);
-				counter++;
-				
+				counter++;				
 			}
 			
 		} catch (IOException e) {
@@ -47,7 +46,7 @@ public static int getNextPair(int value, int counter) {
 	
 	try {
 		
-		while (buffAmount < bitsNeeded) {
+		while (buffAmount <= bitsNeeded) {
 			if (line != -1) {
 				value = readByte(line,value);
 				line = System.in.read();
@@ -75,18 +74,18 @@ public static int readByte(int data,int value) {
 }
 
 
-public static int readData(int line,int counter) {
+public static int readData(int value,int counter) {
 	int iBits = bitsNeeded(counter);
 	int mask = generateMask(iBits,32);
-	int phrase = (line & mask) >>> (32 - iBits);
-	line = line << iBits;
+	int phrase = (value & mask) >>> (32 - iBits);
+	value = value << iBits;
 	int cBits = 8;
 	mask = generateMask(8,32);
-	int character = (line & mask)  >>> (24);
+	int character = (value & mask)  >>> (24);
 	char c = (char) character;
-	line = line << 8;
+	value = value << 8;
 	System.out.println(phrase + "," + character );
-	return line;
+	return value;
 }
 
 }
