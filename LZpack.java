@@ -28,7 +28,7 @@ public static void main(String[] args) {
 //		e.printStackTrace();
 //	}
 	
-	int maxBits = 32; // B length
+	
 	int value = 0; // B
 	int counter = 1;
 	//File input = new File("input.txt");
@@ -42,7 +42,11 @@ public static void main(String[] args) {
 			counter++;
 		}
 		br.close();
-		System.out.println( Integer.toBinaryString(value));
+		//System.out.println( Integer.toBinaryString(value));
+		System.out.write(value);
+		System.out.flush();
+	
+	
 		
 		
 		
@@ -57,10 +61,7 @@ public static void main(String[] args) {
 
 public static int bitsNeeded(int counter) {
 	   double bits = Math.log(counter)/Math.log(2.0);
-	   if(bits == 0) {
-		   return 1;
-	   }
-	   return (int)(Math.ceil(bits));
+	   return ((int)(bits)) + 1;
 }
 
 public static int generateMask(int length, int maxBits) {
@@ -151,15 +152,12 @@ public static int pack(int value, int masdsk, int inputBits, int bitOffset) {
 	
 public static int outputBytes(int value) {
 	//System.out.println("THE VALUE IS: " + Integer.toBinaryString(value));
-	 int firstOutInt =  ((value & generateMask(8,32))>>> 24) ;
-	 int secondOutInt =  ((value &  0x00FF0000)>>> 16);
-	 System.out.println("FIRST INTEGER OUTPUT" + Integer.toBinaryString(firstOutInt));
-	 System.out.println("SECOND INTEGER OUTPUT" + Integer.toBinaryString(secondOutInt));
+	 
 	 byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
 	 byte secondOut = (byte) ((value &  0x00FF0000)>>> 16);
-	 //System.out.write(firstOut);
+	 System.out.write(firstOut);
 	 
-	// System.out.write(secondOut);
+	 System.out.write(secondOut);
 	
 	 System.out.flush();
 	 currUsedBits = currUsedBits - 16;
