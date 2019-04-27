@@ -30,7 +30,7 @@ public static void main(String[] args) {
 			counter++;
 		}
 		br.close();
-		double numOut = Math.ceil(currUsedBits / 8);
+		int numOut = currUsedBits / 8;
 		for(int i =0;i< numOut; i ++) {
 			int mask = generateMask(8,32);
 			int output = value & mask;
@@ -39,8 +39,13 @@ public static void main(String[] args) {
 			value = value << 8;
 			System.out.flush();
 		}
-		
-	
+		if (currUsedBits % 8 != 0) {
+			int mask = generateMask(8,32);
+			int output = value & mask;
+			output = output >>> 24;
+			System.out.write(output);
+			System.out.flush();
+		}
 	
 	
 		
