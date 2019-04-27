@@ -6,17 +6,28 @@ import java.io.IOException;
 public class LZunpack {
 	
 	public static int cBits = 8;
-	public static int buffAmount = 0;
-	public static int line;
 	public static int maxBits = 32;
 	
 	public static void main(String[] args) {	
 		int counter = 1;
 		int output = 0;
+		int buffAmount = 0;
+		int iBits;
+		int tBits;
 		try {
-			line = System.in.read();
+			int line = System.in.read();
 			while(line != -1) {
-				output = getNextPair(output,counter);
+				iBits = bitsNeeded(counter);
+				tBits = iBits + cBits;
+				while (buffAmount <= tBits) {
+				if (line != -1) {
+					output = readByte(line,output);
+					buffAmount += cBits;
+					line = System.in.read();
+				}else break;
+				}
+				output = readData(output,iBits);
+				buffAmount -= tBits;
 				counter++;				
 			}
 			
@@ -42,28 +53,12 @@ public class LZunpack {
 	}	
 
 	public static int getNextPair(int value, int counter) {
-		int iBits = bitsNeeded(counter);
-		int bitsNeeded = iBits + cBits;
-		try {
-			while (buffAmount <= bitsNeeded) {
-				if (line != -1) {
-					value = readByte(line,value);
-					line = System.in.read();
-				}else break;
-			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		value = readData(value,iBits);
-		buffAmount = buffAmount - bitsNeeded;
-		return value;
+		
 	}
 
 	public static int readByte(int data,int value) {
 		int shift = (maxBits - cBits) - buffAmount;
 		data = data << shift;
-		buffAmount = buffAmount + cBits;
 		value = value | data;
 		return value;
 	}
