@@ -27,7 +27,7 @@ public static void main(String[] args) {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
-	int availableBits = 32;
+	
 	int maxBits = 32; // B length
 	int value = 0; // B
 	int counter = 1;
@@ -75,7 +75,7 @@ public static int generateMask(int length, int maxBits) {
 public static int encodeLine(String Line, int counter, int value) {
 	String[] lineValues = Line.split(",");
 	int index = Integer.parseInt(lineValues[0]);
-	char character = lineValues[1].charAt(0);
+	int character = Integer.parseInt(lineValues[1]);
 	int iBits = bitsNeeded(counter);
 	int cBits = 8;
 	int availableBits = 32 - currUsedBits;
