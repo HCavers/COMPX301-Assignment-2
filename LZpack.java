@@ -7,9 +7,9 @@ import java.io.InputStreamReader;
 public class LZpack {
 	
 	public static int currUsedBits = 0; // X length
-	public static int byteLength = 8;
+	public static int cBits = 8;
 	public static int maxBits = 32;
-	public static int twoByte = 16;
+	public static int doubleByte = 16;
 	
 	public static void main(String[] args) {	
 		int value = 0; 
@@ -23,12 +23,12 @@ public class LZpack {
 				counter++;
 			}
 			br.close();
-			int numOut = currUsedBits / byteLength;
+			int numOut = currUsedBits / cBits;
 			for(int i = 0; i< numOut; i ++) {
 				outputBytes(value);
-				value <<= byteLength;			
+				value <<= cBits;			
 			}
-			if (currUsedBits % byteLength != 0) {
+			if (currUsedBits % cBits != 0) {
 				outputBytes(value);
 			}
 		} catch (Exception e) {
@@ -56,36 +56,20 @@ public class LZpack {
 		int character = Integer.parseInt(lineValues[1]);
 		int iBits = bitsNeeded(counter);
 		int availableBits = maxBits - currUsedBits;
-		if(iBits <= availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
-			availableBits = availableBits - iBits;
-			value = pack(value,index,availableBits);
-			currUsedBits = currUsedBits + iBits;
-				if(byteLength <= availableBits) {
-					availableBits = availableBits - byteLength;
-					value = pack(value,character,availableBits);
-					currUsedBits = currUsedBits + byteLength;
-					return value;
-				}
-				value = makeSpace(value);
-				availableBits = availableBits + byteLength;
-				value = pack(value,character,availableBits);
-				currUsedBits = currUsedBits + byteLength;
-				return value;
-		}	
-		value = makeSpace(value);
-		availableBits = availableBits + twoByte - iBits;
-		value = pack(value,index,availableBits);
-		currUsedBits = currUsedBits + iBits;
-		if(byteLength <= availableBits) {
-			availableBits = availableBits - byteLength;
-			value = pack(value,character,availableBits);
-			currUsedBits = currUsedBits + byteLength;
-			return value;
+		if(iBits > availableBits) {
+			value = makeSpace(value);
+			availableBits += doubleByte;
 		}
-		value = makeSpace(value);
-		availableBits = availableBits + byteLength;
+		availableBits -= iBits;
+		value = pack(value,index,availableBits);
+		currUsedBits += iBits;
+		if(cBits > availableBits) {
+			value = makeSpace(value);
+			availableBits += doubleByte;
+		}
+		availableBits -= cBits;
 		value = pack(value,character,availableBits);
-		currUsedBits = currUsedBits + byteLength;
+		currUsedBits += cBits;
 		return value;
 	}
 	
@@ -98,18 +82,18 @@ public class LZpack {
 	}
 	
 	public static int makeSpace(int value) {
-		byte firstOut = (byte) ((value & generateMask(byteLength,maxBits))>>> (maxBits - byteLength)) ;
-		byte secondOut = (byte) ((value &  0x00FF0000)>>> twoByte);
+		byte firstOut = (byte) ((value & generateMask(cBits,maxBits))>>> (maxBits - cBits)) ;
+		byte secondOut = (byte) ((value &  0x00FF0000)>>> doubleByte);
 		System.out.write(firstOut);
 		System.out.write(secondOut);
 		System.out.flush();
-		currUsedBits = currUsedBits - twoByte;
-		value <<= twoByte;
+		currUsedBits = currUsedBits - doubleByte;
+		value <<= doubleByte;
 		return value;
 	}
 
 	public static void outputBytes(int value) {
-		byte output = (byte) ((value & generateMask(byteLength,maxBits))>>> (maxBits - byteLength)) ;
+		byte output = (byte) ((value & generateMask(cBits,maxBits))>>> (maxBits - cBits)) ;
 		System.out.write(output);
 		System.out.flush();
 	}
