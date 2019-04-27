@@ -1,153 +1,116 @@
 // Hunter Cavers (1288108)
 // Sivaram Manoharan (1299026)
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
+import java.io.InputStreamReader;
 
 public class LZpack {
-public static int currUsedBits = 0; // X length
-public static void main(String[] args) {	
+	
+	public static int currUsedBits = 0; // X length
+	public static int byteLength = 8;
+	public static int maxBits = 32;
+	public static int twoByte = 16;
+	
+	public static void main(String[] args) {	
+		int value = 0; 
+		int counter = 1;
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String Line = br.readLine();
+			while(Line != null) {
+				value = encodeLine(Line,counter,value);
+				Line = br.readLine();
+				counter++;
+			}
+			br.close();
+			int numOut = currUsedBits / byteLength;
+			for(int i = 0; i< numOut; i ++) {
+				outputBytes(value);
+				value <<= byteLength;			
+			}
+			if (currUsedBits % byteLength != 0) {
+				outputBytes(value);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 
-	int value = 0; // B
-	int counter = 1;
-	
-	try {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String Line = br.readLine();
-		while(Line != null) {
-			value = encodeLine(Line,counter,value);
-			Line = br.readLine();
-			counter++;
-		}
-		br.close();
-		int numOut = currUsedBits / 8;
-		for(int i =0;i< numOut; i ++) {
-			byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
-			//int mask = generateMask(8,32);
-			//int output = value & mask;
-			//output = output >>> 24;
-			System.out.write(firstOut);
-			value = value << 8;
-			System.out.flush();
-		}
-		if (currUsedBits % 8 != 0) {
-			byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
-			//int mask = generateMask(8,32);
-			//int output = value & mask;
-			//output = output >>> 24;
-			System.out.write(firstOut);
-			System.out.flush();
-		}
-	
-	
-		
-		
-		
-		
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-	
-	
-}
+	public static int bitsNeeded(int counter) {
+		double bits = Math.log(counter)/Math.log(2.0);
+		return ((int)(bits)) + 1;
+	}
 
-public static int bitsNeeded(int counter) {
-	   double bits = Math.log(counter)/Math.log(2.0);
-	   return ((int)(bits)) + 1;
-}
+	public static int generateMask(int length, int totalBits) {
+		int offset = totalBits - length;
+		int mask = 1 << length;
+		mask--;
+		mask <<= offset;
+		return mask;
+	}
 
-public static int generateMask(int length, int maxBits) {
-	int offset = maxBits - length;
-	int mask = 1 << length;
-	mask--;
-	mask <<= offset;
-	return mask;
-}
-
-public static int encodeLine(String Line, int counter, int value) {
-	String[] lineValues = Line.split(",");
-	int index = Integer.parseInt(lineValues[0]);
-	int character = Integer.parseInt(lineValues[1]);
-	int iBits = bitsNeeded(counter);
-	int cBits = 8;
-	int availableBits = 32 - currUsedBits;
-	
-	
-	
-	if(iBits <= availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
-		availableBits = availableBits - iBits;
+	public static int encodeLine(String Line, int counter, int value) {
+		String[] lineValues = Line.split(",");
+		int index = Integer.parseInt(lineValues[0]);
+		int character = Integer.parseInt(lineValues[1]);
+		int iBits = bitsNeeded(counter);
+		int availableBits = maxBits - currUsedBits;
+		if(iBits <= availableBits) { // if the bits needed to encode the Phrase number is less than the available bits encode the phrase number
+			availableBits = availableBits - iBits;
+			value = pack(value,index,availableBits);
+			currUsedBits = currUsedBits + iBits;
+				if(byteLength <= availableBits) {
+					availableBits = availableBits - byteLength;
+					value = pack(value,character,availableBits);
+					currUsedBits = currUsedBits + byteLength;
+					return value;
+				}
+				value = makeSpace(value);
+				availableBits = availableBits + byteLength;
+				value = pack(value,character,availableBits);
+				currUsedBits = currUsedBits + byteLength;
+				return value;
+		}	
+		value = makeSpace(value);
+		availableBits = availableBits + twoByte - iBits;
 		value = pack(value,index,availableBits);
 		currUsedBits = currUsedBits + iBits;
-		if(cBits <= availableBits) {
-			availableBits = availableBits - cBits;
+		if(byteLength <= availableBits) {
+			availableBits = availableBits - byteLength;
 			value = pack(value,character,availableBits);
-			currUsedBits = currUsedBits + cBits;
+			currUsedBits = currUsedBits + byteLength;
 			return value;
 		}
-		value = outputBytes(value);
-		availableBits = availableBits + 16;
-		availableBits = availableBits - cBits;
+		value = makeSpace(value);
+		availableBits = availableBits + byteLength;
 		value = pack(value,character,availableBits);
-		currUsedBits = currUsedBits + cBits;
+		currUsedBits = currUsedBits + byteLength;
 		return value;
 	}
-	value = outputBytes(value);
-	availableBits = availableBits + 16 - iBits;
-	value = pack(value,index,availableBits);
-	currUsedBits = currUsedBits + iBits;
-	if(cBits <= availableBits) {
-		availableBits = availableBits - cBits;
-		value = pack(value,character,availableBits);
-		currUsedBits = currUsedBits + cBits;
+	
+	public static int pack(int value, int inputBits, int bitOffset) {
+		int mask = generateMask(currUsedBits,maxBits);
+		value = value & mask;
+		inputBits <<= bitOffset;
+		value = value | inputBits;
 		return value;
 	}
-	value = outputBytes(value);
-	availableBits = availableBits + 16 - cBits;
-	value = pack(value,character,availableBits);
-	currUsedBits = currUsedBits + cBits;
-	return value;
 	
-	
-	
-}
-	
-public static int pack(int value, int inputBits, int bitOffset) {
-	int mask = generateMask(currUsedBits,32);
-	value = value & mask;
-	inputBits = inputBits << bitOffset;
-	value = value | inputBits;
-	return value;
-}
-	
-public static int outputBytes(int value) {
-	 byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
-	 byte secondOut = (byte) ((value &  0x00FF0000)>>> 16);
-	 System.out.write(firstOut);
-	 
-	 System.out.write(secondOut);
-	
-	 System.out.flush();
-	 currUsedBits = currUsedBits - 16;
-	 value = value << 16;
-	
-	 return value;
-}
-	
-	
-	
-	
-	
-	
-	
+	public static int makeSpace(int value) {
+		byte firstOut = (byte) ((value & generateMask(byteLength,maxBits))>>> (maxBits - byteLength)) ;
+		byte secondOut = (byte) ((value &  0x00FF0000)>>> twoByte);
+		System.out.write(firstOut);
+		System.out.write(secondOut);
+		System.out.flush();
+		currUsedBits = currUsedBits - twoByte;
+		value <<= twoByte;
+		return value;
+	}
+
+	public static void outputBytes(int value) {
+		byte output = (byte) ((value & generateMask(byteLength,maxBits))>>> (maxBits - byteLength)) ;
+		System.out.write(output);
+		System.out.flush();
+	}
 }
