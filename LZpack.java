@@ -3,6 +3,7 @@
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -30,9 +31,10 @@ public static void main(String[] args) {
 	int maxBits = 32; // B length
 	int value = 0; // B
 	int counter = 1;
-	File input = new File("input.txt");
+	//File input = new File("input.txt");
 	try {
-		BufferedReader br = new BufferedReader(new FileReader(input));
+		//BufferedReader br = new BufferedReader(new FileReader(input));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String Line = br.readLine();
 	
 		while(Line != null) {
