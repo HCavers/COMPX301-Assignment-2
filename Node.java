@@ -1,5 +1,5 @@
 // Hunter Cavers (1288108)
-// Sivarim Manoharan (1299026)
+// Sivaram Manoharan (1299026)
 
 // Import libraries needed
 import java.util.List;
