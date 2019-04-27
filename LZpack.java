@@ -36,11 +36,9 @@ public static void main(String[] args) {
 		//BufferedReader br = new BufferedReader(new FileReader(input));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String Line = br.readLine();
-		System.out.println("READ LINE START");
 		while(Line != null) {
 			value = encodeLine(Line,counter,value);
 			Line = br.readLine();
-			System.out.println("READ LINE");
 			counter++;
 		}
 		br.close();
@@ -153,11 +151,15 @@ public static int pack(int value, int masdsk, int inputBits, int bitOffset) {
 	
 public static int outputBytes(int value) {
 	//System.out.println("THE VALUE IS: " + Integer.toBinaryString(value));
+	 int firstOutInt =  ((value & generateMask(8,32))>>> 24) ;
+	 int secondOutInt =  ((value &  0x00FF0000)>>> 16);
+	 System.out.println("FIRST INTEGER OUTPUT" + Integer.toBinaryString(firstOutInt));
+	 System.out.println("SECOND INTEGER OUTPUT" + Integer.toBinaryString(secondOutInt));
 	 byte firstOut = (byte) ((value & generateMask(8,32))>>> 24) ;
 	 byte secondOut = (byte) ((value &  0x00FF0000)>>> 16);
-	 System.out.write(firstOut);
+	 //System.out.write(firstOut);
 	 
-	 System.out.write(secondOut);
+	// System.out.write(secondOut);
 	
 	 System.out.flush();
 	 currUsedBits = currUsedBits - 16;
