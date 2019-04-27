@@ -48,13 +48,10 @@ public class LZunpack {
 	}
 
 
-public static int bitsNeeded(int counter) {
-	   double bits = Math.log(counter)/Math.log(2.0);
-	   if(bits == 0) {
-		   return 1;
-	   }
-	   return (int)(Math.ceil(bits));
-}
+	public static int bitsNeeded(int counter) {
+		   double bits = Math.log(counter)/Math.log(2.0);
+		   return ((int)(bits)) + 1;
+	}
 
 public static int generateMask(int length, int maxBits) {
 	int offset = maxBits - length;
