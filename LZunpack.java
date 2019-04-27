@@ -114,7 +114,7 @@ public static int readData(int line,int counter) {
 	//System.out.println(Integer.toBinaryString(character));
 	char c = (char) character;
 	line = line << 8;
-	System.out.println("(" + phrase +  "," + character + ")");
+	System.out.println(phrase + "," + character );
 	return line;
 }
 
