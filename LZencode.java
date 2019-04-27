@@ -6,6 +6,7 @@ import java.io.IOException;
 
 class LZencode
 {
+	// Dictionary used to encode data in LZ78
 	static Dictionary dic = new Dictionary();
 	// Main method
 	public static void main(String[] args)
@@ -18,6 +19,7 @@ class LZencode
 		}
 		catch(IOException ex)
 		{
+			// Print exception stack trace to help with debugging
 			ex.printStackTrace();
 		}
 	}
