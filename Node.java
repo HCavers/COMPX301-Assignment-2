@@ -45,13 +45,16 @@ class Node
 	// Returns the child that contains the input or returns null
 	public Node childrenContain(byte value)
 	{
+		// For each child
 		for(Node node : _children)
 		{
+			// If child matches value return it
 			if(node.getValue() == value)
 			{
 				return node;
 			}
 		}
+		// If no child was found to match return null
 		return null;
 	}
 }
