@@ -42,8 +42,8 @@ public static void main(String[] args) {
 			counter++;
 		}
 		br.close();
-		System.out.write(value);
-		System.out.flush();
+		System.out.println( Integer.toBinaryString(value));
+		
 		
 		
 		
