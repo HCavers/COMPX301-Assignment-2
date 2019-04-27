@@ -21,7 +21,7 @@ public class LZunpack {
 				tBits = iBits + cBits;
 				while (buffAmount <= tBits) {
 				if (line != -1) {
-					output = readByte(line,output);
+					output = readByte(line,output,buffAmount);
 					buffAmount += cBits;
 					line = System.in.read();
 				}else break;
@@ -52,11 +52,7 @@ public class LZunpack {
 		return mask;
 	}	
 
-	public static int getNextPair(int value, int counter) {
-		
-	}
-
-	public static int readByte(int data,int value) {
+	public static int readByte(int data,int value, int buffAmount) {
 		int shift = (maxBits - cBits) - buffAmount;
 		data = data << shift;
 		value = value | data;
