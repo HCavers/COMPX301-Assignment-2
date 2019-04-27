@@ -36,11 +36,9 @@ public static void main(String[] args) {
 		//BufferedReader br = new BufferedReader(new FileReader(input));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String Line = br.readLine();
-		System.out.println("READ LINE START");
 		while(Line != null) {
 			value = encodeLine(Line,counter,value);
 			Line = br.readLine();
-			System.out.println("READ LINE");
 			counter++;
 		}
 		br.close();
