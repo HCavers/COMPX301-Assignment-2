@@ -6,30 +6,30 @@ import java.io.InputStreamReader;
 
 public class LZpack {
 	
-	public static int currUsedBits = 0; // X length
-	public static int cBits = 8;
-	public static int maxBits = 32;
-	public static int doubleByte = 16;
+	public static int currUsedBits = 0; // Stores the amount of bits currently in the buffer
+	public static int cBits = 8; // The amount of bits for a character (1 byte)
+	public static int maxBits = 32; // The amount of bits in an Integer
+	public static int doubleByte = 16; // the amount of bits for 2 bytes
 	
 	public static void main(String[] args) {	
-		int value = 0; 
-		int counter = 1;
+		int value = 0; // Stores the buffer
+		int counter = 1; // Variable that keeps track of the total phrases 
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String Line = br.readLine();
-			while(Line != null) {
-				value = encodeLine(Line,counter,value);
-				Line = br.readLine();
-				counter++;
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // Creates buffered reader that reads Standard input
+			String Line = br.readLine(); // Reads the first line of input
+			while(Line != null) { // While there is still data to be read
+				value = encodeLine(Line,counter,value); // Encodes the current line
+				Line = br.readLine(); // Reads the next line
+				counter++; // Increments the counter
 			}
-			br.close();
-			int numOut = currUsedBits / cBits;
-			for(int i = 0; i< numOut; i ++) {
-				outputBytes(value);
-				value <<= cBits;			
+			br.close(); // Closes the buffer
+			int numOut = currUsedBits / cBits; // Calculates the number of bytes that can be outputted from the buffer
+			for(int i = 0; i< numOut; i ++) { 
+				outputBytes(value); // Outputs a byte
+				value <<= cBits;	// Shifts the buffer by one byte length		
 			}
 			if (currUsedBits % cBits != 0) {
-				outputBytes(value);
+				outputBytes(value); // Outputs the remaining bits in the case that the bits in the buffer were not a multiple of 8
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
