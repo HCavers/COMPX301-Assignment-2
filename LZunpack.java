@@ -8,14 +8,16 @@ import java.io.IOException;
 // Sivaram Manoharan (1299026)
 public class LZunpack {
 	public static int buffAmount = 0;
+	public static int line;
 	public static void main(String[] args) {	
 		int counter = 1;
 		int output = 0;
 		try {
-			int line = System.in.read();
-			while(line != 0) {
-				output = getNextPair(output,counter,line);
+			line = System.in.read();
+			while(line != -1) {
+				output = getNextPair(output,counter);
 				counter++;
+				
 			}
 			
 		} catch (IOException e) {
@@ -40,13 +42,13 @@ public static int generateMask(int length, int maxBits) {
 	return mask;
 }
 
-public static int getNextPair(int value, int counter, int input) {
+public static int getNextPair(int value, int counter) {
 	int bitsNeeded = bitsNeeded(counter) + 8;
 	
 	try {
-		int line = input;
+		
 		while (buffAmount < bitsNeeded) {
-			if (line != 0) {
+			if (line != -1) {
 				value = readByte(line,value);
 				line = System.in.read();
 			}
